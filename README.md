@@ -1,13 +1,18 @@
 ﻿#Zabbix-Ceilometer Proxy
 **HCD ZCP**
 
-##Chương trình được phát hành dưới giấy phép Apache. Chương trình gốc tại:
-
-[OneSourceConsult](https://github.com/OneSourceConsult/ZabbixCeilometer-Proxy)
-
 ##Cách sử dụng
 
-####Tại Zabbix host
+####0. Môi trường yêu cầu
+
+- Một cụm máy chủ cài đặt **OpenStack** phiên bản **Kilo**, có thể tham khảo script tại https://github.com/vietstacker/openstack-kilo-multinode-U14.04-v1 
+
+- Cài đặt Ceilometer trên cụm OpenStack này. Tham khảo hướng dẫn tại http://docs.openstack.org/kilo/install-guide/install/apt/content/ch_ceilometer.html 
+
+- Một máy chủ Zabbix Server phiên bản 2.2. Có thể tham khảo tại https://github.com/hocchudong/ghichep-zabbix
+
+
+####1. Tại Zabbix host
 
 Log on với quyền root
 
@@ -23,7 +28,7 @@ cd /root/
 git clone https://github.com/hocchudong/ZabbixCeilometer-Proxy.git
 ```
 
-####Tại Controller node:
+####2. Tại Controller node:
 
 *Yêu cầu: Cần cài đặt ceilometer*
 
@@ -38,21 +43,31 @@ notification_driver = messaging
 ...
 ```
 
-Trở lại Zabbix Node
+####3. Trở lại Zabbix Node
+
+- Tại web của zabbix, download `Template_nova_26-12-14.xml` và import vào Các template Zabbix của bạn (Configuration, Template, Import)
+
+- Khởi chạy chương trình
 
 `cd ZabbixCeilometer-Proxy`
 
-Sửa file proxy.conf và cấu hình các thông số cho đúng với cấu hình zabbix và openstack của bạn. Có thể tham khảo file proxy.conf trong github này
+Sửa file proxy.conf và cấu hình các thông số cho đúng với cấu hình zabbix và openstack của bạn. Có thể tham khảo file `proxy.conf` trong github này
 
 Sau khi sửa xong chạy lệnh:
 
 `python proxy.py`
 
-Tại web của zabbix, download `template_nova.xml` và import vào Các template của bạn (Configuration, Template, Import)
-
 **Chú ý** Bạn có thể tham khảo hướng dẫn tại [youtube](https://www.youtube.com/watch?v=DXz-W9fgvRk)
 
-####Sử dụng script auto start
+**Kết quả**
+
+- Xem log của chương trình tại '/var/log/zcp.log'
+
+- Proxy được tạo trên Zabbix: http://prnt.sc/agaj0v
+
+- Các máy ảo được monitor thông qua proxy: http://prnt.sc/agaito
+
+####4. Sử dụng script auto start
 
 ```sh
 cd /root/ZabbixCeilometer-Proxy
